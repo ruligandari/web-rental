@@ -60,5 +60,23 @@ Berikut adalah seluruh daftar perombakan antarmuka (UI/UX) dan fitur yang disele
 - **UI Admin (`admin/reservasi/index.php`):** Merombak kolom "Total Bayar" menjadi "**Info Pembayaran**" yang mengelompokkan Nominal Bayar, Metode Bayar, dan Tanggal Bayar.
 - **Kwitansi / Invoice (`invoice/view.php`):** Memasukkan informasi metode pembayaran ke dalam rincian status Invoice.
 
+### 11. Perbaikan Bug Server (Session File Lock)
+- **Backend:** Menyelesaikan masalah halaman web yang terkadang *loading* tanpa henti (ERR_CONNECTION_ABORTED) pada PHP Development Server dengan menambahkan `session_write_close()` di dalam `Home.php`. Ini mencegah penguncian file sesi saat memuat aset ganda secara bersamaan.
+
+### 12. Penyempurnaan Landing Page (`landing.php`)
+- **Tampilan:** Mengubah teks deskripsi dan kontak pada bagian *Footer* menjadi warna putih (`text-white`) agar terbaca jelas dengan *background* gelap. Memperbaiki ikon versi *Pro* menjadi versi *Free* (`fa-shield-alt`).
+- **Data Dinamis:** Mengubah pengaturan katalog armada di *Landing Page* agar dapat menampilkan maksimal 6 mobil tanpa dibatasi oleh status "Tersedia".
+- **UX Booking:** Menerapkan pengecekan dinamis. Armada yang sedang berstatus di-sewa/servis akan memiliki tombol "Sewa" yang berubah warna abu-abu kemerahan, bertuliskan "**Tidak Tersedia**", dan dimatikan (*disabled*).
+
+### 13. Resolusi Logika Reservasi & Tanggal Overlap
+- **Backend (Status Induk):** Menghentikan praktik perubahan otomatis pada kolom `status_mobil` di tabel `travel` menjadi "Disewa" setelah pesanan masuk. Hal ini memastikan mobil tetap ada di katalog agar pelanggan lain bisa mem-*booking* untuk **tanggal yang berbeda**. (Perubahan pada `Webhook.php` dan `Admin/Reservasi.php`).
+- **Backend (Validasi Bentrok):** Menambahkan *query* validasi "overlap" di `Pelanggan/Reservasi::store()`. Jika pelanggan memesan jadwal yang bersinggungan (*overlap*) dengan pesanan orang lain yang belum *Selesai*, sistem akan menolaknya.
+
+### 14. Integrasi Kalender Visual (Flatpickr)
+- Mengubah *form* tanggal yang kaku di `reservasi_form.php` menjadi interaktif dengan *plugin* **Flatpickr**.
+- Menambahkan **Card Ketersediaan Bulan Ini** berupa kalender interaktif langsung (*inline calendar*) di bagian panel informasi mobil.
+- Secara cerdas, kalender akan langsung **mencoret warna abu-abu (disable)** seluruh rentang tanggal di mana armada tersebut sudah ter-*booking* berdasarkan *database*, memberikan transparansi *availability* secara total kepada pelanggan.
+- Menambahkan proteksi *Javascript* untuk mencegah *bypass* pada rentang tanggal yang dipesan.
+
 ---
-**Status Saat Ini:** Seluruh fitur pembayaran (termasuk *resume payment*), modernisasi UI/UX, dan penyempurnaan alur bisnis telah **100% tuntas**. Sistem sudah *Production-Ready*.
+**Status Saat Ini:** Seluruh fitur pembayaran (termasuk *resume payment*), manajemen tanggal, visualisasi kalender ketersediaan, dan modernisasi UI/UX telah **100% tuntas**. Sistem dipastikan tangguh dan siap *Production-Ready*.
